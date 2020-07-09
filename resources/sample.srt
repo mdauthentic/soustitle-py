@@ -1,0 +1,12 @@
+1
+00:00:12,815 --> 00:00:14,509
+Lorem ipsum dolor sit amet
+consectetur adipiscing elit.
+
+2
+00:00:14,815 --> 00:00:16,498
+Lorem ipsum dolor sit amet
+
+3
+00:00:16,934 --> 00:00:17,814
+Lorem ipsum dolor sit amet
