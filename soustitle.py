@@ -4,6 +4,11 @@ import csv
 
 
 class Subtitle:
+    ''' 
+        Simple subtitle parser.
+        Accepts either subtitle file or string, 
+        then returns a dictionary of parsed srt strings
+    '''
 
     def __init__(self, srt_file=None, srt_string=None):
         self.file_path = srt_file
@@ -54,9 +59,12 @@ class Subtitle:
             get_file_size = self.file_size(self.file_path)
             print('\t> ' + get_file_size)
 
-            with open(self.file_path) as f:
-                file_stream = f.read()
-                return self.parser(file_stream)
+            try:
+                with open(self.file_path) as f:
+                    file_stream = f.read()
+                    return self.parser(file_stream)
+            except FileNotFoundError as f_error:
+                print(f_error)
 
 
     def to_csv(self, dict_list, csv_file=None):
@@ -83,5 +91,5 @@ class Subtitle:
             output = json_file
         with open(output, 'w') as fout:
             json.dump(dict , fout)
-            msg = f'Output successfully written to {os.path.dirname(os.path.abspath(json_file))}'
+            msg = f'{self.color_start}\t> Output successfully written to {os.path.dirname(os.path.abspath(json_file))}{self.color_end}'
         return msg
