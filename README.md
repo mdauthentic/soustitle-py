@@ -64,7 +64,7 @@ Alternatively, the file path could be passed directly to the `open` method.
 - Convert to `.json` format
 
 ```python3
->>> csv_out = parse_srt.to_json(parse, 'resources/output.csv')
+>>> csv_out = parse_srt.to_json(parse, 'resources/output.json')
 >>> print(csv_out)
 ```
 

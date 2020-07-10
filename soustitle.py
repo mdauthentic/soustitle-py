@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import json
 import csv
 
@@ -20,13 +20,17 @@ class Subtitle:
 
 
     @staticmethod
+    def size_in_bytes(size):
+        for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+            if size < 1024.0:
+                return "%3.1f %s" % (size, x)
+            size /= 1024.0
+
+    @staticmethod
     def file_size(file_path):
-        get_file_size = os.path.getsize(file_path)
-        if get_file_size >= 1000:
-            data_size = int(get_file_size) // (1024 * 1024)
-            return f'File size is {data_size}Kb'
-        else:
-            return f'File size is {get_file_size}Bytes'
+        get_file_size = Path(file_path).stat().st_size
+        if Path.is_file(file_path):
+            return size_in_bytes(get_file_size)
 
     @staticmethod
     def format_time_delta(time_delta):
@@ -56,11 +60,9 @@ class Subtitle:
     def open(self):
         # maybe I don't have to be too strict with the file ext
         if self.file_path.endswith(".srt"):
-            get_file_size = self.file_size(self.file_path)
-            print('\t> ' + get_file_size)
-
             try:
-                with open(self.file_path) as f:
+                p = Path(self.file_path)
+                with p.open(mode='r') as f:
                     file_stream = f.read()
                     return self.parser(file_stream)
             except FileNotFoundError as f_error:
@@ -78,7 +80,8 @@ class Subtitle:
                 writer.writeheader()
                 for item in dict_list:
                     writer.writerow(item)
-                msg = f'{self.color_start}\t> Output successfully written to {os.path.dirname(os.path.abspath(csv_file))}{self.color_end}'
+                get_file_size = self.file_size(output)
+                msg = f'{self.color_start}\t> {get_file_size} successfully written to {Path(output).resolve()}{self.color_end}'
                 return msg
         except IOError:
             print("I/O error")
@@ -89,7 +92,11 @@ class Subtitle:
             output = self.json_file
         else:
             output = json_file
-        with open(output, 'w') as fout:
-            json.dump(dict , fout)
-            msg = f'{self.color_start}\t> Output successfully written to {os.path.dirname(os.path.abspath(json_file))}{self.color_end}'
-        return msg
+        try:
+            with open(output, 'w') as fout:
+                json.dump(dict , fout)
+                get_file_size = self.file_size(output)
+                msg = f'{self.color_start}\t> {get_file_size} successfully written to {Path(output).resolve()}{self.color_end}'
+                return msg
+        except IOError:
+            print("I/O error")
