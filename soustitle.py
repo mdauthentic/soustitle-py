@@ -36,7 +36,7 @@ class Subtitle:
     def format_time_delta(time_delta):
         return time_delta.strip().replace(",", ":")
 
-    def parser(self, file_str=None):
+    def parse(self, file_str=None):
         subtitle_string = []
         try:
             if file_str is None:
@@ -72,7 +72,7 @@ class Subtitle:
                 p = Path(self.file_path)
                 with p.open(mode="r") as f:
                     file_stream = f.read()
-                    return self.parser(file_stream)
+                    return self.parse(file_stream)
             except FileNotFoundError as f_error:
                 logging.error(f_error)
 
@@ -98,6 +98,7 @@ class Subtitle:
             output = self.json_file
         else:
             output = json_file
+        logging.info("Attempting to write output to file")
         with open(output, "w") as fout:
             json.dump(dict, fout)
             file_size = self.file_size(output)
