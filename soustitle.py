@@ -26,7 +26,6 @@ class Subtitle:
                 return "%3.1f %s" % (size, x)
             size /= 1024.0
 
-    @staticmethod
     def file_size(self, file_path):
         get_file_size = Path(file_path).stat().st_size
         if Path.is_file(file_path):
