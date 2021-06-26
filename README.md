@@ -105,3 +105,10 @@ Run
 ```bash
 pytest tests.py
 ```
+
+Optionally, you can run the test with docker
+
+```bash
+docker build -t image-name .
+docker run image-name
+```
