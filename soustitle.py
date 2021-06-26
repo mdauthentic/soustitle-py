@@ -8,7 +8,7 @@ class Subtitle:
     """Soustitle
     Simple subtitle parser.
     Accepts either subtitle file or string,
-    then returns a dictionary of parsed srt strings
+    then returns a dictionary of parsed srt strings.
     """
 
     def __init__(self, srt_file=None, srt_string=None):
@@ -16,11 +16,10 @@ class Subtitle:
         self.srt_string = srt_string
         self.csv_file = "output.csv"
         self.json_file = "output.json"
-        self.color_start = "\33[32m"
-        self.color_end = "\33[32m"
         self._msg = "successfully written to"
 
-    def size_in_bytes(self, size):
+    @staticmethod
+    def size_in_bytes(size):
         for x in ["bytes", "KB", "MB", "GB", "TB"]:
             if size < 1024.0:
                 return "%3.1f %s" % (size, x)
@@ -76,11 +75,7 @@ class Subtitle:
                 logging.error(f_error)
 
     def to_csv(self, dict_list, csv_file=None) -> None:
-        if csv_file is None:
-            output = self.csv_file
-        else:
-            output = csv_file
-
+        output = self.csv_file if csv_file is None else csv_file
         logging.info("Attempting to write output to file")
         with open(output, "w") as f:
             writer = csv.DictWriter(f, dict_list[0].keys())
@@ -88,19 +83,12 @@ class Subtitle:
             for item in dict_list:
                 writer.writerow(item)
             file_size = self.file_size(output)
-            logging.info(
-                f"{self.color_start}\t> {file_size} {self._msg} {Path(output).resolve()}{self.color_end}"
-            )
+            logging.info(f"{file_size} {self._msg} {output}")
 
     def to_json(self, dict, json_file=None):
-        if json_file is None:
-            output = self.json_file
-        else:
-            output = json_file
+        output = self.json_file if json_file is None else json_file
         logging.info("Attempting to write output to file")
         with open(output, "w") as fout:
             json.dump(dict, fout)
             file_size = self.file_size(output)
-            logging.info(
-                f"{self.color_start}\t> {file_size} {self._msg} {Path(output).resolve()}{self.color_end}"
-            )
+            logging.info(f"{file_size} {self._msg} {output}")
