@@ -10,7 +10,6 @@ This script is ported from my `Scala` version of the library. You can check the 
 
 ### Usage
 
-Import
 ```python3
 $ python3
 >>> from soustitle import Subtitle
@@ -33,6 +32,7 @@ Alternatively, the file path could be passed directly to the `open` method.
 ```
 
 #### Parsing string
+
 ```python3
 >>> sample = """1
             00:00:12,815 --> 00:00:14,509
@@ -48,8 +48,28 @@ Alternatively, the file path could be passed directly to the `open` method.
             Lorem ipsum dolor sit amet."""
 
 >>> parse_srt = Subtitle(srt_string=sample)
->>> parse = parse_srt.parser()
->>> print(parse)
+>>> result = parse_srt.parse()
+>>> print(result)
+```
+
+#### Result of Parsed String
+
+```json
+[
+    {
+        "start_time": "00:00:12:815", 
+        "end_time": "00:00:14:509", 
+        "subtitle_text": "Lorem ipsum dolor sit amet consectetur adipiscing elit."
+    }, {
+        "start_time": "00:00:14:815", 
+        "end_time": "00:00:16:498", 
+        "subtitle_text": "Lorem ipsum dolor sit amet."
+    }, {
+        "start_time": "00:00:16:934", 
+        "end_time": "00:00:17:814", 
+        "subtitle_text": "Lorem ipsum dolor sit amet."
+    }
+]
 ```
 
 #### Convert parsed result
@@ -57,19 +77,31 @@ Alternatively, the file path could be passed directly to the `open` method.
 - Convert to `.csv` format
 
 ```python3
->>> csv_out = parse_srt.to_csv(parse, 'resources/output.csv')
+>>> csv_out = parse_srt.to_csv(result, 'resources/output.csv')
 >>> print(csv_out)
 ```
 
 - Convert to `.json` format
 
 ```python3
->>> csv_out = parse_srt.to_json(parse, 'resources/output.json')
+>>> csv_out = parse_srt.to_json(result, 'resources/output.json')
 >>> print(csv_out)
 ```
 
 ### Dev
-```
+
+```bash
 git clone https://github.com/mdauthentic/soustitle-py.git
 cd soustitle-py
+python3 -m venv my-env
+source my-env/bin/activate  
+pip install -r requirements.txt
+```
+
+### Testing
+
+Run
+
+```bash
+pytest tests.py
 ```
